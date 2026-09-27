@@ -117,53 +117,54 @@ export default function Rastrear() {
       <video className="rastreo-video" autoPlay loop muted playsInline preload="auto">
         <source src={VIDEO_FONDO} type="video/mp4" />
       </video>
-      <div className="rastreo-overlay" />
 
-      <header className="rastreo-header">
-        <div className="rastreo-brand">
-          <img src="/logo.jpg" alt="ENVIOS AYORA" />
-        </div>
-      </header>
-
-      <main className="rastreo-main">
-        <div className="rastreo-hero-texto">
-          <span className="rastreo-eyebrow">Rastreo de envíos</span>
-          <h1>¿Dónde está tu paquete?</h1>
-          <p>Escribe tu número de guía o tu código de cliente para ver el estado de tu envío al instante.</p>
-        </div>
-
-        <form className="rastreo-form" onSubmit={buscar}>
-          <input
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            placeholder="Ej. 1Z999AA10123456784 o CLI-abc123"
-            autoCapitalize="characters"
-          />
-          <button type="submit" className="rastreo-btn" disabled={buscando}>
-            {buscando ? 'Buscando...' : 'Rastrear'}
-          </button>
-        </form>
-
-        {error && <div className="rastreo-error">{error}</div>}
-
-        {paquetes && (
-          <div className="rastreo-resultados">
-            {paquetes.map((p) => (
-              <Linea key={p.id} paquete={p} />
-            ))}
+      <div className="rastreo-content">
+        <header className="rastreo-header">
+          <div className="rastreo-brand">
+            <img src="/logo.jpg" alt="ENVIOS AYORA" />
           </div>
-        )}
-      </main>
+        </header>
 
-      <footer className="rastreo-footer">ENVIOS AYORA — rastreo de paquetes</footer>
+        <main className="rastreo-main">
+          <div className="rastreo-hero-texto">
+            <span className="rastreo-eyebrow">Rastreo de envíos</span>
+            <h1>¿Dónde está tu paquete?</h1>
+            <p>Escribe tu número de guía o tu código de cliente para ver el estado de tu envío al instante.</p>
+          </div>
+
+          <form className="rastreo-form" onSubmit={buscar}>
+            <input
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              placeholder="Ej. 1Z999AA10123456784 o CLI-abc123"
+              autoCapitalize="characters"
+            />
+            <button type="submit" className="rastreo-btn" disabled={buscando}>
+              {buscando ? 'Buscando...' : 'Rastrear'}
+            </button>
+          </form>
+
+          {error && <div className="rastreo-error">{error}</div>}
+
+          {paquetes && (
+            <div className="rastreo-resultados">
+              {paquetes.map((p) => (
+                <Linea key={p.id} paquete={p} />
+              ))}
+            </div>
+          )}
+        </main>
+
+        <footer className="rastreo-footer">ENVIOS AYORA — rastreo de paquetes</footer>
+      </div>
 
       <style jsx global>{`
+        html, body {
+          background: transparent;
+        }
         .rastreo-shell {
           position: relative;
           min-height: 100vh;
-          color: #fff;
-          display: flex;
-          flex-direction: column;
         }
         .rastreo-video {
           position: fixed;
@@ -172,17 +173,15 @@ export default function Rastrear() {
           width: 100vw;
           height: 100vh;
           object-fit: cover;
-          z-index: -2;
-        }
-        .rastreo-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background: linear-gradient(180deg, rgba(5, 6, 10, 0.05) 0%, rgba(5, 6, 10, 0.1) 60%, rgba(5, 6, 10, 0.35) 100%);
           z-index: -1;
-          pointer-events: none;
+        }
+        .rastreo-content {
+          position: relative;
+          z-index: 1;
+          min-height: 100vh;
+          color: #fff;
+          display: flex;
+          flex-direction: column;
         }
         .rastreo-header {
           padding: 20px 24px;
