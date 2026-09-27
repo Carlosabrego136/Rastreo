@@ -126,25 +126,27 @@ export default function Rastrear() {
         </header>
 
         <main className="rastreo-main">
-          <div className="rastreo-hero-texto">
-            <span className="rastreo-eyebrow">Rastreo de envíos</span>
-            <h1>¿Dónde está tu paquete?</h1>
-            <p>Escribe tu número de guía o tu código de cliente para ver el estado de tu envío al instante.</p>
+          <div className="rastreo-panel">
+            <div className="rastreo-hero-texto">
+              <span className="rastreo-eyebrow">Rastreo de envíos</span>
+              <h1>¿Dónde está tu paquete?</h1>
+              <p>Escribe tu número de guía o tu código de cliente para ver el estado de tu envío al instante.</p>
+            </div>
+
+            <form className="rastreo-form" onSubmit={buscar}>
+              <input
+                value={valor}
+                onChange={(e) => setValor(e.target.value)}
+                placeholder="Ej. 1Z999AA10123456784 o CLI-abc123"
+                autoCapitalize="characters"
+              />
+              <button type="submit" className="rastreo-btn" disabled={buscando}>
+                {buscando ? 'Buscando...' : 'Rastrear'}
+              </button>
+            </form>
+
+            {error && <div className="rastreo-error">{error}</div>}
           </div>
-
-          <form className="rastreo-form" onSubmit={buscar}>
-            <input
-              value={valor}
-              onChange={(e) => setValor(e.target.value)}
-              placeholder="Ej. 1Z999AA10123456784 o CLI-abc123"
-              autoCapitalize="characters"
-            />
-            <button type="submit" className="rastreo-btn" disabled={buscando}>
-              {buscando ? 'Buscando...' : 'Rastrear'}
-            </button>
-          </form>
-
-          {error && <div className="rastreo-error">{error}</div>}
 
           {paquetes && (
             <div className="rastreo-resultados">
@@ -199,6 +201,15 @@ export default function Rastrear() {
           width: 100%;
           margin: 0 auto;
           padding: 16px 20px 60px;
+        }
+        .rastreo-panel {
+          background: rgba(8, 10, 16, 0.72);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 20px;
+          padding: 28px 24px;
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         }
         .rastreo-hero-texto {
           text-align: center;
@@ -281,6 +292,7 @@ export default function Rastrear() {
           display: flex;
           flex-direction: column;
           gap: 18px;
+          margin-top: 18px;
         }
         .rastreo-card {
           background: rgba(5, 6, 10, 0.6);
