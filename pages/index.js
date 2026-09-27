@@ -217,9 +217,9 @@ export default function Rastrear() {
         }
         .rastreo-eyebrow {
           display: inline-block;
-          background: rgba(246, 168, 63, 0.15);
-          color: #f6a83f;
-          border: 1px solid rgba(246, 168, 63, 0.45);
+          background: rgba(203, 210, 222, 0.15);
+          color: #dfe3ea;
+          border: 1px solid rgba(203, 210, 222, 0.45);
           border-radius: 999px;
           padding: 5px 14px;
           font-size: 12px;
@@ -232,7 +232,7 @@ export default function Rastrear() {
           margin: 0 0 10px;
           font-size: 30px;
           font-weight: 800;
-          background: linear-gradient(90deg, #f6a83f 0%, #f6d34a 100%);
+          background: linear-gradient(90deg, #b7bfcc 0%, #ffffff 45%, #9aa4b5 100%);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
@@ -264,14 +264,14 @@ export default function Rastrear() {
         .rastreo-form input::placeholder { color: rgba(255, 255, 255, 0.45); }
         .rastreo-form input:focus {
           outline: none;
-          border-color: #f6a83f;
+          border-color: #c7cdd8;
         }
         .rastreo-btn {
           padding: 14px 22px;
           border-radius: 10px;
           border: none;
-          background: linear-gradient(90deg, #f6a83f 0%, #f6d34a 100%);
-          color: #1c1408;
+          background: linear-gradient(90deg, #c7cdd8 0%, #ffffff 100%);
+          color: #101a30;
           font-weight: 800;
           font-size: 15px;
           cursor: pointer;
@@ -353,7 +353,7 @@ export default function Rastrear() {
           opacity: 0.5;
         }
         .rastreo-paso.completado .rastreo-punto {
-          background: linear-gradient(135deg, #f6a83f 0%, #f6d34a 100%);
+          background: linear-gradient(135deg, #c7cdd8 0%, #ffffff 100%);
           border-color: transparent;
           opacity: 1;
         }
@@ -365,7 +365,7 @@ export default function Rastrear() {
           height: calc(100% - 20px);
           background: rgba(255, 255, 255, 0.18);
         }
-        .rastreo-linea.completado { background: #f6a83f; }
+        .rastreo-linea.completado { background: #c7cdd8; }
         .rastreo-paso-texto { margin-left: 14px; padding-bottom: 22px; }
         .rastreo-paso-label {
           font-size: 14px;
