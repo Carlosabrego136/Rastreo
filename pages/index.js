@@ -180,8 +180,9 @@ export default function Rastrear() {
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: linear-gradient(180deg, rgba(5, 6, 10, 0.55) 0%, rgba(5, 6, 10, 0.75) 60%, rgba(5, 6, 10, 0.9) 100%);
+          background: linear-gradient(180deg, rgba(5, 6, 10, 0.05) 0%, rgba(5, 6, 10, 0.1) 60%, rgba(5, 6, 10, 0.35) 100%);
           z-index: -1;
+          pointer-events: none;
         }
         .rastreo-header {
           padding: 20px 24px;
@@ -225,12 +226,14 @@ export default function Rastrear() {
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
+          filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6));
         }
         .rastreo-hero-texto p {
           margin: 0;
-          color: rgba(255, 255, 255, 0.8);
+          color: rgba(255, 255, 255, 0.9);
           font-size: 14.5px;
           line-height: 1.5;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
         }
         .rastreo-form {
           display: flex;
