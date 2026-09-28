@@ -52,7 +52,11 @@ function Linea({ paquete }) {
         <span className={`rastreo-badge estado-${paquete.estado}`}>{ESTADO_LABEL[paquete.estado] || paquete.estado}</span>
       </div>
 
-      {paquete.foto && <img src={paquete.foto} alt="Foto del paquete" className="rastreo-foto" />}
+      {paquete.foto ? (
+        <img src={paquete.foto} alt="Foto del paquete" className="rastreo-foto" />
+      ) : (
+        <div className="rastreo-sin-foto">📷 Sin foto disponible para este paquete</div>
+      )}
 
       <div className="rastreo-timeline">
         {ORDEN_ESTADOS.map((estado, i) => {
@@ -327,6 +331,16 @@ export default function Rastrear() {
           object-fit: cover;
           border-radius: 10px;
           margin-bottom: 16px;
+        }
+        .rastreo-sin-foto {
+          font-size: 12.5px;
+          color: rgba(255, 255, 255, 0.55);
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px dashed rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+          padding: 10px 12px;
+          margin-bottom: 16px;
+          text-align: center;
         }
         .rastreo-timeline {
           display: flex;
