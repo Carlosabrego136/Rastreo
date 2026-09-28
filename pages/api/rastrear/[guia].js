@@ -13,6 +13,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Falta el número de guía o código de rastreo' });
   }
 
+  // Normalizamos: mayúsculas y sin espacios/guiones/puntos, para que no importe
+  // si la clienta lo escribe distinto a como quedó capturado (mayúsculas,
+  // espacios de más, guiones, etc.) — solo el código QR del cliente coincidía
+  // siempre porque ese se escanea sin margen de error de captura.
+  const valorNormalizado = valor.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
   const { rows } = await query(
     `SELECT p.*,
             c.nombre AS cliente_nombre,
@@ -22,10 +28,11 @@ export default async function handler(req, res) {
        JOIN clientes c ON c.id = p.cliente_id
        JOIN vendedores v ON v.id = p.vendedor_id
        LEFT JOIN paqueterias pa ON pa.id = p.paqueteria_id
-      WHERE p.numero_guia = $1 OR c.qr_codigo = $1
+      WHERE (p.numero_guia IS NOT NULL AND UPPER(REGEXP_REPLACE(p.numero_guia, '[^A-Za-z0-9]', '', 'g')) = $1)
+         OR UPPER(REGEXP_REPLACE(c.qr_codigo, '[^A-Za-z0-9]', '', 'g')) = $1
       ORDER BY p.capturado_en DESC
       LIMIT 5`,
-    [valor]
+    [valorNormalizado]
   );
 
   if (rows.length === 0) {
