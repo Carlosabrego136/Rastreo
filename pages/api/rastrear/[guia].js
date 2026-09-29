@@ -7,17 +7,27 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).end();
 
   const { guia } = req.query;
-  const valor = (guia || '').trim();
 
-  if (!valor) {
+  // Tolerancia de escritura: quitamos espacios normales Y espacios "invisibles"
+  // que a veces vienen pegados de WhatsApp/Notas (espacio de no separación,
+  // espacio de ancho cero, etc.), tanto al principio y final como en medio del
+  // texto, antes de cualquier otra cosa.
+  const valorCrudo = (guia || '').replace(/[ ​‌‍﻿]/g, ' ').trim();
+
+  if (!valorCrudo) {
     return res.status(400).json({ error: 'Falta el número de guía o código de rastreo' });
   }
 
-  // Normalizamos: mayúsculas y sin espacios/guiones/puntos, para que no importe
-  // si la clienta lo escribe distinto a como quedó capturado (mayúsculas,
-  // espacios de más, guiones, etc.) — solo el código QR del cliente coincidía
-  // siempre porque ese se escanea sin margen de error de captura.
-  const valorNormalizado = valor.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  // Normalizamos: mayúsculas y sin espacios/guiones/puntos/símbolos, para que no
+  // importe cómo lo haya escrito o pegado la clienta (mayúsculas/minúsculas,
+  // espacios de más al principio, en medio o al final, guiones, puntos, etc.)
+  // — solo el código QR del cliente coincidía siempre porque ese se escanea
+  // sin margen de error de captura.
+  const valorNormalizado = valorCrudo.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+  if (!valorNormalizado) {
+    return res.status(400).json({ error: 'Falta el número de guía o código de rastreo' });
+  }
 
   const { rows } = await query(
     `SELECT p.*,

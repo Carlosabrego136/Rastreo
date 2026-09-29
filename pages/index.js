@@ -92,15 +92,22 @@ export default function Rastrear() {
 
   async function buscar(e) {
     e.preventDefault();
-    if (!valor.trim()) return;
+    // Quitamos espacios normales y espacios "invisibles" (los que a veces se
+    // pegan de WhatsApp o Notas) al principio, en medio y al final, para que
+    // no falle la búsqueda solo por un espacio de más.
+    const valorLimpio = valor.replace(/[ ​‌‍﻿]/g, ' ').trim();
+    if (!valorLimpio) return;
     setBuscando(true);
     setError('');
     setPaquetes(null);
     try {
-      const res = await fetch(`/api/rastrear/${encodeURIComponent(valor.trim())}`);
+      const res = await fetch(`/api/rastrear/${encodeURIComponent(valorLimpio)}`);
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'No encontramos información con ese dato.');
+        setError(
+          data.error ||
+            'No encontramos ningún paquete con ese número de guía o código. Verifica que sea exactamente el que te compartieron, sin errores de captura.'
+        );
         return;
       }
       setPaquetes(data.paquetes);
