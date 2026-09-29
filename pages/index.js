@@ -1,6 +1,99 @@
 import { useState } from 'react';
 import Head from 'next/head';
 
+// Instrucciones específicas por paquetería para cuando su sitio NO permite
+// mandar a alguien directo al resultado de la guía (confirmado probando con
+// guías reales — ver notas en db/schema.sql del repo principal). En esos
+// casos copiamos el número al portapapeles y les decimos exactamente qué
+// pegar y dónde, para que no se queden perdidos en un buscador vacío.
+const INSTRUCCIONES_COPIA = {
+  Estafeta:
+    'Se copió tu número de guía. Se va a abrir la página de Estafeta — pégalo (mantén presionado y elige "Pegar") en el buscador y dale a la lupa.',
+  Bajapack:
+    'Se copió tu número de guía. Se va a abrir la página de Bajapack — pégalo en el buscador y presiona Enter o el botón de buscar.',
+  Volaris:
+    'Se copió tu número de guía (sin el "036-"). Se va a abrir la página de Volaris — el campo "Prefix" ya trae 036 puesto, solo pega tu número en el campo "AWB No\'s" y dale "Track".',
+};
+const INSTRUCCION_GENERICA =
+  'Se copió tu número de guía. Se va a abrir la página de la paquetería — pégalo en su buscador para ver el estado.';
+
+// Para Volaris el campo de guía en su sitio (Air Waybill) no lleva el prefijo
+// "036-" que a veces se captura junto con el número — ese prefijo ya viene
+// puesto de fábrica en su formulario, así que si lo copiamos completo sobra.
+function guiaParaCopiar(paqueteriaNombre, numeroGuia) {
+  if (!numeroGuia) return '';
+  if (paqueteriaNombre === 'Volaris') {
+    const sinPrefijo = numeroGuia.trim().replace(/^\d{2,4}-/, '');
+    return sinPrefijo || numeroGuia;
+  }
+  return numeroGuia;
+}
+
+async function copiarAlPortapapeles(texto) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(texto);
+      return true;
+    }
+  } catch (err) {
+    // Seguimos al método de respaldo de abajo.
+  }
+  // Respaldo para navegadores/contextos donde no hay API de portapapeles:
+  // un textarea invisible + el comando viejo de copiar.
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = texto;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+function BotonPaqueteria({ paqueteriaNombre, numeroGuia, url }) {
+  const [aviso, setAviso] = useState('');
+
+  if (!url || !numeroGuia) return null;
+
+  // Si la plantilla trae "{guia}" es porque esa paquetería SÍ deja mandar a
+  // alguien directo al resultado — confirmado probando con guías reales.
+  if (url.includes('{guia}')) {
+    const link = url.replace('{guia}', encodeURIComponent(numeroGuia));
+    return (
+      <a href={link} target="_blank" rel="noreferrer" className="rastreo-boton-paqueteria">
+        Rastrear en {paqueteriaNombre} ↗
+      </a>
+    );
+  }
+
+  // Si no, copiamos la guía y abrimos su página en blanco, con instrucciones
+  // claras de qué hacer ahí (cada paquetería es distinta).
+  async function alHacerClic() {
+    const valor = guiaParaCopiar(paqueteriaNombre, numeroGuia);
+    const copiado = await copiarAlPortapapeles(valor);
+    setAviso(
+      copiado
+        ? INSTRUCCIONES_COPIA[paqueteriaNombre] || INSTRUCCION_GENERICA
+        : `No pudimos copiar automáticamente. Tu número de guía es: ${valor}`
+    );
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  return (
+    <div className="rastreo-paqueteria-manual">
+      <button type="button" className="rastreo-boton-paqueteria" onClick={alHacerClic}>
+        Copiar guía y abrir {paqueteriaNombre} ↗
+      </button>
+      {aviso && <p className="rastreo-aviso-copia">{aviso}</p>}
+    </div>
+  );
+}
+
 const VIDEO_FONDO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260801_022931_e13cbef4-690a-42d2-b5ee-5b3b1f483c83.mp4';
 
@@ -56,6 +149,14 @@ function Linea({ paquete }) {
         <img src={paquete.foto} alt="Foto del paquete" className="rastreo-foto" />
       ) : (
         <div className="rastreo-sin-foto">📷 Sin foto disponible para este paquete</div>
+      )}
+
+      {paquete.numero_guia && paquete.paqueteria_nombre && (
+        <BotonPaqueteria
+          paqueteriaNombre={paquete.paqueteria_nombre}
+          numeroGuia={paquete.numero_guia}
+          url={paquete.paqueteria_url}
+        />
       )}
 
       <div className="rastreo-timeline">
@@ -368,6 +469,44 @@ export default function Rastrear() {
           border-radius: 10px;
           padding: 10px 12px;
           margin-bottom: 16px;
+          text-align: center;
+        }
+        .rastreo-paqueteria-manual {
+          margin-bottom: 16px;
+        }
+        .rastreo-boton-paqueteria {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          width: 100%;
+          justify-content: center;
+          padding: 11px 16px;
+          border-radius: 10px;
+          border: 1px solid rgba(199, 205, 216, 0.5);
+          background: rgba(255, 255, 255, 0.08);
+          color: #fff;
+          font-size: 13.5px;
+          font-weight: 700;
+          text-decoration: none;
+          cursor: pointer;
+          margin-bottom: 16px;
+          font-family: inherit;
+        }
+        .rastreo-boton-paqueteria:hover {
+          background: rgba(255, 255, 255, 0.16);
+        }
+        .rastreo-paqueteria-manual .rastreo-boton-paqueteria {
+          margin-bottom: 8px;
+        }
+        .rastreo-aviso-copia {
+          margin: 0 0 16px;
+          padding: 10px 12px;
+          border-radius: 10px;
+          background: rgba(110, 231, 183, 0.14);
+          border: 1px solid rgba(110, 231, 183, 0.4);
+          color: #d1fae5;
+          font-size: 12.5px;
+          line-height: 1.5;
           text-align: center;
         }
         .rastreo-timeline {

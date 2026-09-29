@@ -33,7 +33,8 @@ export default async function handler(req, res) {
     `SELECT p.*,
             c.nombre AS cliente_nombre,
             v.nombre AS vendedor_nombre,
-            pa.nombre AS paqueteria_nombre
+            pa.nombre AS paqueteria_nombre,
+            pa.url_rastreo_manual AS paqueteria_url
        FROM paquetes p
        JOIN clientes c ON c.id = p.cliente_id
        JOIN vendedores v ON v.id = p.vendedor_id
@@ -60,6 +61,7 @@ export default async function handler(req, res) {
         cliente_nombre: p.cliente_nombre,
         vendedor_nombre: p.vendedor_nombre,
         paqueteria_nombre: p.paqueteria_nombre,
+        paqueteria_url: p.paqueteria_url,
         numero_guia: p.numero_guia,
         estado: p.estado,
         capturado_en: p.capturado_en,
