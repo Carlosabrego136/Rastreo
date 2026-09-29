@@ -126,6 +126,7 @@ export default function Rastrear() {
         <header className="rastreo-header">
           <div className="rastreo-brand">
             <img src="/logo.jpg" alt="ENVIOS AYORA" />
+            <span className="rastreo-brand-tag">ENVIOS AYORA</span>
           </div>
         </header>
 
@@ -190,14 +191,34 @@ export default function Rastrear() {
           flex-direction: column;
         }
         .rastreo-header {
-          padding: 20px 24px;
+          padding: 20px 24px 8px;
           display: flex;
           justify-content: center;
+        }
+        .rastreo-brand {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
         }
         .rastreo-brand img {
           height: 64px;
           border-radius: 10px;
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+        .rastreo-brand-tag {
+          display: inline-block;
+          padding: 6px 18px;
+          border-radius: 999px;
+          font-size: 12.5px;
+          font-weight: 800;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #eef1f6;
+          background: linear-gradient(180deg, rgba(40, 48, 66, 0.85) 0%, rgba(15, 19, 28, 0.85) 100%);
+          border: 1px solid rgba(199, 205, 216, 0.55);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
         }
         .rastreo-main {
           flex: 1;
