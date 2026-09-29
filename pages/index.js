@@ -95,7 +95,7 @@ function BotonPaqueteria({ paqueteriaNombre, numeroGuia, url }) {
 }
 
 const VIDEO_FONDO =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260801_022931_e13cbef4-690a-42d2-b5ee-5b3b1f483c83.mp4';
+  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260808_075824_7c8a2ef3-826c-43ca-81a1-162429faa306.mp4';
 
 const ESTADO_LABEL = {
   recibido: 'Recibido en bodega',
@@ -336,10 +336,8 @@ export default function Rastrear() {
           padding: 16px 20px 60px;
         }
         .rastreo-panel {
-          background: rgba(8, 10, 16, 0.72);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: linear-gradient(135deg, #1b2740 0%, #0a1120 100%);
+          border: 1px solid rgba(199, 205, 216, 0.35);
           border-radius: 20px;
           padding: 28px 24px;
           box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
@@ -387,9 +385,8 @@ export default function Rastrear() {
           flex: 1;
           padding: 14px 16px;
           border-radius: 10px;
-          border: 1px solid rgba(255, 255, 255, 0.22);
-          background: rgba(5, 6, 10, 0.55);
-          backdrop-filter: blur(4px);
+          border: 1px solid rgba(199, 205, 216, 0.35);
+          background: #0a1120;
           color: #fff;
           font-size: 15px;
           margin-bottom: 0;
@@ -428,9 +425,8 @@ export default function Rastrear() {
           margin-top: 18px;
         }
         .rastreo-card {
-          background: rgba(5, 6, 10, 0.6);
-          backdrop-filter: blur(6px);
-          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: linear-gradient(135deg, #16213a 0%, #0a1120 100%);
+          border: 1px solid rgba(199, 205, 216, 0.3);
           border-radius: 16px;
           padding: 20px;
         }
